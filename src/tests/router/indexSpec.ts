@@ -2,20 +2,20 @@ import supertest from "supertest";
 import app from "../../index";
 
 const request = supertest(app);
-describe("Test endpoint responses", () => {
+describe("Test endpoint responses", (): void => {
   const correctFileName = "encenadaport.jpg",
     rowngFileNaem = "fail.png",
     width = 200,
     height = 200;
 
-  it("gets the api endpoint", async () => {
+  it("gets the api endpoint", async (): Promise<void> => {
     const response = await request.get(
       `/api/images?fileName=${correctFileName}&width=${width}&height=${height}`
     );
     expect(response.status).toBe(200);
   });
 
-  it("use not exist file name", async () => {
+  it("use not exist file name", async (): Promise<void> => {
     const response = await request.get(
       `/api/images?fileName=${rowngFileNaem}&width=${width}&height=${height}`
     );
@@ -23,7 +23,7 @@ describe("Test endpoint responses", () => {
     expect(response.text).toEqual("File is not exist");
   });
 
-  it("fileName unexist", async () => {
+  it("fileName unexist", async (): Promise<void> => {
     const response = await request.get(
       `/api/images?width=${width}&height=${height}`
     );

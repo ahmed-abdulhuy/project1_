@@ -10,7 +10,8 @@ routes.get(
   async (req: Express.Request, res: Express.Response): Promise<void> => {
     const { filename, width, height } = req.query,
       thumpDir = path.resolve("assets/thump/"),
-      fullDir = "./assets/full";
+      fullDir = "./assets/full",
+      fullFileName = filename + ".jpg";
 
     if (!width || isNaN(Number(width)) || Number(width) < 0) {
       res.send("Width value is not correct");
@@ -20,17 +21,15 @@ routes.get(
       return;
     }
 
-    const fileThump = `${!width || isNaN(Number(width)) ? 200 : width}_${
-        !height || isNaN(Number(height)) ? 200 : height
-      }_${filename}`,
-      fullPath = path.join(fullDir, !filename ? "" : (filename as string)),
+    const fileThump = `${width}_${height}_${fullFileName}`,
+      fullPath = path.join(fullDir, !filename ? "" : fullFileName),
       thumpPath = path.join(thumpDir, fileThump);
 
     if (!fs.existsSync(fullPath) || !filename) {
       res.send("File is not exist");
     } else {
       if (!fs.existsSync(thumpPath)) {
-        await resizeImage(filename as string, Number(width), Number(height));
+        await resizeImage(fullFileName, Number(width), Number(height));
       }
       res.sendFile(thumpPath);
     }
